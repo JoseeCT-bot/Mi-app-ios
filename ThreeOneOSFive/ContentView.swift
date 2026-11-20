@@ -8,16 +8,7 @@ struct ContentView: View {
     init() {
 #if targetEnvironment(simulator)
         let arguments = ProcessInfo.processInfo.arguments
-        let initialTab: Int
-        if arguments.contains("--simulate-patch-tab") {
-            initialTab = 2
-        } else if arguments.contains("--simulate-cleaner-tab") {
-            initialTab = 3
-        } else if arguments.contains("--simulate-wallpaper-tab") {
-            initialTab = 4
-        } else {
-            initialTab = 0
-        }
+        let initialTab = arguments.contains("--simulate-patch-tab") ? 2 : 0
         _selectedTab = State(initialValue: initialTab)
 #else
         _selectedTab = State(initialValue: 0)
@@ -43,18 +34,6 @@ struct ContentView: View {
                     Label(language.text("tab.patches"), systemImage: "shippingbox")
                 }
                 .tag(2)
-
-            CleanerView()
-                .tabItem {
-                    Label(language.text("tab.cleaner"), systemImage: "sparkles")
-                }
-                .tag(3)
-
-            WallpaperLabView()
-                .tabItem {
-                    Label(language.text("tab.wallpapers"), systemImage: "photo.on.rectangle.angled")
-                }
-                .tag(4)
         }
         .tint(AppTheme.accent)
         .onChange(of: patchDraftCoordinator.request?.id) { requestID in
